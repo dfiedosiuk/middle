@@ -1,0 +1,72 @@
+= Find middle
+:toc:
+
+App returns the middle list element. In case of list having even number of elements the left middle element should be returned, e.g. [1,2,3,4] should return 2.
+
+The method findMiddleElement is using recursive method loop.
+In original version method:
+[source]
+def loop(ys: List[T], acc: List[T], cnt: Int): Option[T]
+
+was executing odd list in these steps
+----
+loop(List(1,2,3,4,5), List(1,2,3,4,5), 0)
+loop(List(2,3,4,5), List(2,3,4,5), 1)
+loop(List(3,4,5), List(2,3,4,5), 2)
+loop(List(4,5), List(3,4,5), 3)
+loop(List(5), List(3,4,5), 4)
+loop(null, List(4,5), 4)
+
+result: List(4,5).head = 4
+----
+
+was executing even list in these steps
+----
+loop(List(1,2,3,4,5,) , List(1,2,3,4,5,6), 0)
+loop(List(2,3,4,5,6) , List(2,3,4,5,6), 1)
+loop(List(3,4,5,6) , List(2,3,4,5,6), 2)
+loop(List(4,5,6) , List(3,4,5,6), 3)
+loop(List(5,6) , List(3,4,5,6), 4)
+loop(List(6) , List(4,5,6), 5)
+loop(Nill , (4,5,6), 6)
+
+result: List(4,5,6).head = 4
+----
+
+As can see for odd list right result is before last operation, so I decided to catch this solution adding:
+[source]
+case List(n) => acc.headOption
+
+then I made that even list is also odd by:
+[source]
+val myXS = if(xs.nonEmpty && xs.length != 1) {
+      if (xs.length % 2 == 0) {
+        xs.init
+      } else xs
+    } else xs
+
+After that app returns solution for fallowing lists:
+----
+val numbers1 = List(1,2,3,4,5)
+val numbers2 = List(1,2,3,4,5,6)
+val numbers3 = List.empty[Int]
+val numbers4 = List(1,2)
+val numbers5 = List(1)
+
+Some(3)
+Some(3)
+None
+Some(1)
+Some(1)
+----
+
+== Dependencies
+* Java 8+
+* Scala 2.12+
+
+Specific dependencies in file _build.sbt_
+
+== How to run
+
+[source]
+sbt run
